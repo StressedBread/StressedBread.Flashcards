@@ -1,6 +1,6 @@
 ﻿using Spectre.Console;
-using static StressedBread.Flashcards.Enums;
 using StressedBread.Flashcards.Converters;
+using static StressedBread.Flashcards.Enums;
 
 namespace StressedBread.Flashcards.UI;
 
@@ -20,14 +20,12 @@ internal class MainMenu
             switch (selection)
             {
                 case MenuOption.ManageStacks:
-
                     break;
-                case MenuOption.ManageFlashcards: 
+                case MenuOption.ManageFlashcards:
                     break;
                 case MenuOption.Exit:
                     return;
             }
-
         }
     }
 }

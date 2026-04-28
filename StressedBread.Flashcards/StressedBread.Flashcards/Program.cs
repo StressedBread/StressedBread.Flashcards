@@ -7,13 +7,14 @@ using StressedBread.Flashcards.UI;
 var databaseConfig = new DatabaseConfig();
 var startupView = new StartupView();
 var databaseInitQueries = new DatabaseInitQueries();
+var stacksQueries = new StacksQueries();
 var defaultDatabaseAccess = new DatabaseAccess(databaseConfig.DefaultConnectionString);
 var flashcardsDatabaseAccess = new DatabaseAccess(databaseConfig.FlashcardsConnectionString);
 var databaseInitialization = new DatabaseInitializer(databaseConfig.DefaultConnectionString, databaseConfig.FlashcardsConnectionString, databaseInitQueries, defaultDatabaseAccess, flashcardsDatabaseAccess);
 
 //Controllers and Menus
 var stacksMenu = new StacksMenu();
-var stacksController = new StacksController(stacksMenu);
+var stacksController = new StacksController(stacksMenu, flashcardsDatabaseAccess, stacksQueries);
 var mainMenu = new MainMenu(stacksController);
 var databaseAccess = new DatabaseAccess(databaseConfig.FlashcardsConnectionString);
 

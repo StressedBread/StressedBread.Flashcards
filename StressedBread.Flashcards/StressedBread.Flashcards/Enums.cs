@@ -8,4 +8,15 @@ internal class Enums
         ManageFlashcards,
         Exit
     }
+
+    internal enum StackMenuOption
+    {
+        ViewFlashcards,
+        AddFlashcard,
+        EditFlashcard,
+        DeleteFlashcard,
+        ChangeStack,
+        DeleteStack,
+        BackToMainMenu
+    }
 }

@@ -1,11 +1,15 @@
 ﻿using StressedBread.Flashcards.Controllers;
 using StressedBread.Flashcards.Data;
+using StressedBread.Flashcards.Data.Queries;
 using StressedBread.Flashcards.UI;
 
 //Database configuration and initialization
 var databaseConfig = new DatabaseConfig();
 var startupView = new StartupView();
-var databaseInitialization = new DatabaseInitializer(databaseConfig.DefaultConnectionString, databaseConfig.FlashcardsConnectionString);
+var databaseInitQueries = new DatabaseInitQueries();
+var defaultDatabaseAccess = new DatabaseAccess(databaseConfig.DefaultConnectionString);
+var flashcardsDatabaseAccess = new DatabaseAccess(databaseConfig.FlashcardsConnectionString);
+var databaseInitialization = new DatabaseInitializer(databaseConfig.DefaultConnectionString, databaseConfig.FlashcardsConnectionString, databaseInitQueries, defaultDatabaseAccess, flashcardsDatabaseAccess);
 
 //Controllers and Menus
 var stacksMenu = new StacksMenu();

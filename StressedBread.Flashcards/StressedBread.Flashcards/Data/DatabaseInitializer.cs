@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using StressedBread.Flashcards.Data.Queries;
 using StressedBread.Flashcards.Models;
 
 namespace StressedBread.Flashcards.Data;
@@ -7,11 +8,17 @@ internal class DatabaseInitializer
 {
     private readonly string _defaultConnectionString;
     private readonly string _flashcardsConnectionString;
+    private readonly DatabaseInitQueries _databaseInitQueries;
+    private readonly DatabaseAccess _defaultDatabaseAccess;
+    private readonly DatabaseAccess _flashcardsDatabaseAccess;
 
-    internal DatabaseInitializer(string connectionString, string flashcardsConnectionString)
+    internal DatabaseInitializer(string connectionString, string flashcardsConnectionString, DatabaseInitQueries databaseInitQueries, DatabaseAccess defaultDatabaseAccess, DatabaseAccess flashcardsDatabaseAccess)
     {
         _defaultConnectionString = connectionString;
         _flashcardsConnectionString = flashcardsConnectionString;
+        _databaseInitQueries = databaseInitQueries;
+        _defaultDatabaseAccess = defaultDatabaseAccess;
+        _flashcardsDatabaseAccess = flashcardsDatabaseAccess;
     }
 
     internal DatabaseSetupResultModel IsDefaultConnectionStringValid()
@@ -28,17 +35,7 @@ internal class DatabaseInitializer
     {
         try
         {
-            using var connection = new SqlConnection(_defaultConnectionString);
-            connection.Open();
-
-            var createDbQuery = @"
-            IF DB_ID ('FlashcardsStressedBread') IS NULL
-            BEGIN
-                CREATE DATABASE FlashcardsStressedBread;
-            END";
-
-            using var cmd = new SqlCommand(createDbQuery, connection);
-            cmd.ExecuteNonQuery();
+            _defaultDatabaseAccess.ExecuteQuery(_databaseInitQueries.CreateDatabaseQuery(), _defaultConnectionString);
             return new DatabaseSetupResultModel { IsSuccessful = true };
         }
         catch (Exception ex)
@@ -51,37 +48,8 @@ internal class DatabaseInitializer
     {
         try
         {
-            using var connection = new SqlConnection(_flashcardsConnectionString);
-            connection.Open();
-
-            var createStacksTableQuery = @"
-            IF OBJECT_ID(N'dbo.Stacks', 'U') IS NULL
-            BEGIN
-                CREATE TABLE dbo.Stacks (
-                    Id INT PRIMARY KEY IDENTITY(1,1),
-                    Name NVARCHAR(255) NOT NULL UNIQUE
-                );
-            END";
-
-            var createFlashcardsTableQuery = @"
-            IF OBJECT_ID(N'dbo.Flashcards', 'U') IS NULL
-            BEGIN
-                CREATE TABLE dbo.Flashcards (
-                    Id INT PRIMARY KEY IDENTITY(1,1),
-                    Question NVARCHAR(255) NOT NULL,
-                    Answer NVARCHAR(255) NOT NULL,
-                    StackId INT NOT NULL,
-                    CONSTRAINT FK_Flashcards_Stacks
-                        FOREIGN KEY (StackId) 
-                        REFERENCES dbo.Stacks(Id)
-                        ON DELETE CASCADE
-                );
-            END";
-
-            using var cmd = new SqlCommand(createStacksTableQuery, connection);
-            using var cmd2 = new SqlCommand(createFlashcardsTableQuery, connection);
-            cmd.ExecuteNonQuery();
-            cmd2.ExecuteNonQuery();
+            _flashcardsDatabaseAccess.ExecuteQuery(_databaseInitQueries.CreateStacksTableQuery(), _flashcardsConnectionString);
+            _flashcardsDatabaseAccess.ExecuteQuery(_databaseInitQueries.CreateFlashcardsTableQuery(), _flashcardsConnectionString);
 
             return new DatabaseSetupResultModel { IsSuccessful = true };
         }

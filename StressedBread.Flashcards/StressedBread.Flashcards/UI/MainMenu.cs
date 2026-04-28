@@ -1,4 +1,5 @@
 ﻿using Spectre.Console;
+using StressedBread.Flashcards.Controllers;
 using StressedBread.Flashcards.Converters;
 using static StressedBread.Flashcards.Enums;
 
@@ -6,6 +7,12 @@ namespace StressedBread.Flashcards.UI;
 
 internal class MainMenu
 {
+    private readonly StacksController _stacksController;
+    internal MainMenu(StacksController stacksController)
+    {
+        _stacksController = stacksController;
+    }
+
     internal void Menu()
     {
         while (true)
@@ -20,6 +27,7 @@ internal class MainMenu
             switch (selection)
             {
                 case MenuOption.ManageStacks:
+                    _stacksController.Menu();
                     break;
                 case MenuOption.ManageFlashcards:
                     break;

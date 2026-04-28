@@ -1,41 +1,43 @@
 ﻿using Spectre.Console;
+using StressedBread.Flashcards.Models;
 
 namespace StressedBread.Flashcards.UI;
 
 internal class StartupView
 {
-    internal void ShowDatabaseStringValidation(bool isValid)
+    internal void ShowInitializationMessage()
     {
-        if (!isValid)
-            AnsiConsole.MarkupLine("[red]Error:[/] Connection string is null or empty..");
-        else
-            AnsiConsole.MarkupLine("[green]Connection string is valid.[/]");
+        AnsiConsole.MarkupLine("[green]Initializing database...[/]");
     }
 
-    internal void ShowDatabaseInitializationResult(bool isInitialized)
+    internal void ShowDatabaseStringValidation(DatabaseSetupResultModel result)
     {
-        if (isInitialized)
-            AnsiConsole.MarkupLine("[green]Database already exists.[/]");
-        else
-            AnsiConsole.MarkupLine("[yellow]Database does not exist. It will be created.[/]");
+        if (!result.IsSuccessful)
+            AnsiConsole.MarkupLine("[red]Error:[/] Connection strings are null or empty.");
     }
 
-    internal void ShowTableCreationResult((bool Stacks, bool Flashcards) result)
+    internal void ShowDatabaseInitializationResult(DatabaseSetupResultModel result)
     {
-        if (result.Stacks)
-            AnsiConsole.MarkupLine("[yellow]Stacks table already exists.[/]");
-        else
-            AnsiConsole.MarkupLine("[green]Stacks table created successfully.[/]");
+        if (!result.IsSuccessful)
+            AnsiConsole.MarkupLine($"[red]Error: {result.ErrorMessage}[/]");
+    }
 
-        if (result.Flashcards)
-            AnsiConsole.MarkupLine("[yellow]Flashcards table already exists.[/]");
-        else
-            AnsiConsole.MarkupLine("[green]Flashcards table created successfully.[/]");        
+    internal void ShowTableCreationResult(DatabaseSetupResultModel result)
+    {
+        if (!result.IsSuccessful)
+            AnsiConsole.MarkupLine($"[red]Error: {result.ErrorMessage}[/]");
     }
 
     internal void ContinueToMainMenu()
     {
+        AnsiConsole.MarkupLine("[green]Database initialized.[/]");
         AnsiConsole.MarkupLine("\n[blue]Press any key to continue to the main menu...[/]");
+        Console.ReadKey(true);
+    }
+
+    internal void ShowErrorAndExit()
+    {
+        AnsiConsole.MarkupLine("\n[red]Initialization failed. Press any key to exit...[/]");
         Console.ReadKey(true);
     }
 }

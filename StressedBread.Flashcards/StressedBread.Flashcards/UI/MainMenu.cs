@@ -20,10 +20,14 @@ internal class MainMenu
             switch (selection)
             {
                 case MenuOption.ManageStacks:
-                    
+
                     break;
+                case MenuOption.ManageFlashcards: 
+                    break;
+                case MenuOption.Exit:
+                    return;
             }
-                    
+
         }
     }
 }

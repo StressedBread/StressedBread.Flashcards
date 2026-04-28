@@ -1,5 +1,5 @@
-﻿using Spectre.Console;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
+using StressedBread.Flashcards.Models;
 
 namespace StressedBread.Flashcards.Data;
 
@@ -14,52 +14,56 @@ internal class DatabaseInitializer
         _flashcardsConnectionString = flashcardsConnectionString;
     }
 
-    internal bool IsDefaultConnectionStringValid()
+    internal DatabaseSetupResultModel IsDefaultConnectionStringValid()
     {
-        if (!string.IsNullOrEmpty(_defaultConnectionString))
+        if (!string.IsNullOrWhiteSpace(_defaultConnectionString) && !string.IsNullOrWhiteSpace(_flashcardsConnectionString))
         {
-            return true;
+            return new DatabaseSetupResultModel { IsSuccessful = true };
         }
-        return false;
+
+        return new DatabaseSetupResultModel { IsSuccessful = false };
     }
 
-    internal bool InitializeDatabase()
+    internal DatabaseSetupResultModel InitializeDatabase()
     {
-        using var connection = new SqlConnection(_defaultConnectionString);
-        connection.Open();
+        try
+        {
+            using var connection = new SqlConnection(_defaultConnectionString);
+            connection.Open();
 
-        var createDbQuery = @"
+            var createDbQuery = @"
             IF DB_ID ('FlashcardsStressedBread') IS NULL
             BEGIN
                 CREATE DATABASE FlashcardsStressedBread;
-                SELECT 1;
-            END   
-            ELSE
-                SELECT 0";
+            END";
 
-        using var cmd = new SqlCommand(createDbQuery, connection);
-        var result = (int)cmd.ExecuteScalar();
-        return result != 1;
+            using var cmd = new SqlCommand(createDbQuery, connection);
+            cmd.ExecuteNonQuery();
+            return new DatabaseSetupResultModel { IsSuccessful = true };
+        }
+        catch (Exception ex)
+        {
+            return new DatabaseSetupResultModel { IsSuccessful = false, ErrorMessage = ex.Message };
+        }
     }
 
-    internal (bool Stacks, bool Flashcards) CreateTables()
+    internal DatabaseSetupResultModel CreateTables()
     {
-        using var connection = new SqlConnection(_flashcardsConnectionString);
-        connection.Open();
+        try
+        {
+            using var connection = new SqlConnection(_flashcardsConnectionString);
+            connection.Open();
 
-        var createStacksTableQuery = @"
+            var createStacksTableQuery = @"
             IF OBJECT_ID(N'dbo.Stacks', 'U') IS NULL
             BEGIN
                 CREATE TABLE dbo.Stacks (
                     Id INT PRIMARY KEY IDENTITY(1,1),
                     Name NVARCHAR(255) NOT NULL UNIQUE
-                )
-                SELECT 1;
-            END
-            ELSE
-                SELECT 0";
+                );
+            END";
 
-        var createFlashcardsTableQuery = @"
+            var createFlashcardsTableQuery = @"
             IF OBJECT_ID(N'dbo.Flashcards', 'U') IS NULL
             BEGIN
                 CREATE TABLE dbo.Flashcards (
@@ -71,17 +75,19 @@ internal class DatabaseInitializer
                         FOREIGN KEY (StackId) 
                         REFERENCES dbo.Stacks(Id)
                         ON DELETE CASCADE
-                )
-                SELECT 1;
-            END
-            ELSE
-                SELECT 0";
+                );
+            END";
 
-        using var cmd = new SqlCommand(createStacksTableQuery, connection);
-        using var cmd2 = new SqlCommand(createFlashcardsTableQuery, connection);
-        var result1 = (int)cmd.ExecuteScalar();
-        var result2 = (int)cmd2.ExecuteScalar();
+            using var cmd = new SqlCommand(createStacksTableQuery, connection);
+            using var cmd2 = new SqlCommand(createFlashcardsTableQuery, connection);
+            cmd.ExecuteNonQuery();
+            cmd2.ExecuteNonQuery();
 
-        return (Stacks: result1 != 1, Flashcards: result2 != 1);
+            return new DatabaseSetupResultModel { IsSuccessful = true };
+        }
+        catch (Exception ex)
+        {
+            return new DatabaseSetupResultModel { IsSuccessful = false, ErrorMessage = ex.Message };
+        }
     }
 }

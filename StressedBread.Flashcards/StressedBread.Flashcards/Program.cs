@@ -6,9 +6,19 @@ var startupView = new StartupView();
 var databaseInitialization = new DatabaseInitializer(databaseConfig.DefaultConnectionString, databaseConfig.FlashcardsConnectionString);
 var mainMenu = new MainMenu();
 
-startupView.ShowDatabaseStringValidation(databaseInitialization.IsDefaultConnectionStringValid());
-startupView.ShowDatabaseInitializationResult(databaseInitialization.InitializeDatabase());
-startupView.ShowTableCreationResult(databaseInitialization.CreateTables());
-startupView.ContinueToMainMenu();
+var isStringValid = databaseInitialization.IsDefaultConnectionStringValid();
+var isDatabaseInitialized = databaseInitialization.InitializeDatabase();
+var tableCreationResult = databaseInitialization.CreateTables();
 
-mainMenu.Menu();
+startupView.ShowInitializationMessage();
+startupView.ShowDatabaseStringValidation(isStringValid);
+startupView.ShowDatabaseInitializationResult(isDatabaseInitialized);
+startupView.ShowTableCreationResult(tableCreationResult);
+
+if (isStringValid.IsSuccessful && isDatabaseInitialized.IsSuccessful && tableCreationResult.IsSuccessful)
+{
+    startupView.ContinueToMainMenu();
+    mainMenu.Menu();
+}
+else
+    startupView.ShowErrorAndExit();

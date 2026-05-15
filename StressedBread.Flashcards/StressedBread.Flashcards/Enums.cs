@@ -19,4 +19,11 @@ internal class Enums
         DeleteStack,
         BackToMainMenu
     }
+
+    internal enum FlashcardMenuOption
+    {
+        EditFlashcard,
+        DeleteFlashcard,
+        BackToMainMenu
+    }
 }

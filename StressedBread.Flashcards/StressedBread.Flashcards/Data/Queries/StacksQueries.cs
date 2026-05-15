@@ -8,11 +8,11 @@ internal class StacksQueries
 
     internal string CreateStackQuery()
     {
-        return "INSERT INTO dbo.Stacks (Name) VALUES (@Name); SELECT CAST(SCOPE_IDENTITY() AS INT);";
+        return "INSERT INTO dbo.Stacks (Name) VALUES (@Name);";
     }
 
     internal string DeleteStackQuery()
     {
-        return "DELETE FROM dbo.Stacks WHERE Name = @Name;";
+        return "DELETE FROM dbo.Stacks WHERE Id = @Id;";
     }
 }

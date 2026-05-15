@@ -8,13 +8,16 @@ var databaseConfig = new DatabaseConfig();
 var startupView = new StartupView();
 var databaseInitQueries = new DatabaseInitQueries();
 var stacksQueries = new StacksQueries();
+var flashcardsQueries = new FlashcardsQueries();
 var defaultDatabaseAccess = new DatabaseAccess(databaseConfig.DefaultConnectionString);
 var flashcardsDatabaseAccess = new DatabaseAccess(databaseConfig.FlashcardsConnectionString);
 var databaseInitialization = new DatabaseInitializer(databaseConfig.DefaultConnectionString, databaseConfig.FlashcardsConnectionString, databaseInitQueries, defaultDatabaseAccess, flashcardsDatabaseAccess);
 
 //Controllers and Menus
 var stacksMenu = new StacksMenu();
-var stacksController = new StacksController(stacksMenu, flashcardsDatabaseAccess, stacksQueries);
+var flashcardsUI = new FlashcardsUI();
+var flashcardsController = new FlashcardsController(flashcardsUI, flashcardsDatabaseAccess, flashcardsQueries);
+var stacksController = new StacksController(stacksMenu, flashcardsDatabaseAccess, stacksQueries, flashcardsController);
 var mainMenu = new MainMenu(stacksController);
 var databaseAccess = new DatabaseAccess(databaseConfig.FlashcardsConnectionString);
 

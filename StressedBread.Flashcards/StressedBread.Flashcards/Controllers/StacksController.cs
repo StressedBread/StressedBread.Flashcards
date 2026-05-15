@@ -11,14 +11,16 @@ internal class StacksController
     private readonly StacksMenu _stacksMenu;
     private readonly DatabaseAccess _databaseAccess;
     private readonly StacksQueries _stacksQueries;
+    private readonly FlashcardsController _flashcardsController;
 
     private List<StacksModel> _stacks = new();
 
-    public StacksController(StacksMenu stacksMenu, DatabaseAccess databaseAccess, StacksQueries stacksQueries)
+    public StacksController(StacksMenu stacksMenu, DatabaseAccess databaseAccess, StacksQueries stacksQueries, FlashcardsController flashcardsController)
     {
         _stacksMenu = stacksMenu;
         _databaseAccess = databaseAccess;
         _stacksQueries = stacksQueries;
+        _flashcardsController = flashcardsController;
     }
 
     internal void Menu()
@@ -36,6 +38,7 @@ internal class StacksController
             else
             {
                 string stackName = _stacks.First(s => s.Name.ToLower() == result.ToLower()).Name;
+                int stackId = _stacks.First(s => s.Name.ToLower() == result.ToLower()).Id;
 
                 StackMenuOption option = _stacksMenu.ManageStackMenuView(stackName);
 
@@ -44,7 +47,7 @@ internal class StacksController
                 if (option == StackMenuOption.BackToMainMenu)
                     return;
 
-                ManageStack(option, stackName);
+                ManageStack(option, stackId);
             }
         }
     }
@@ -54,20 +57,24 @@ internal class StacksController
         _databaseAccess.ExecuteQuery(_stacksQueries.CreateStackQuery(), new { Name = name });
     }
 
-    internal void ManageStack(StackMenuOption option, string stackName)
+    internal void ManageStack(StackMenuOption option, int stackId)
     {
         switch (option)
         {
             case StackMenuOption.ViewFlashcards:
+                _flashcardsController.ViewFlashcards(stackId);
                 break;
             case StackMenuOption.AddFlashcard:
+                _flashcardsController.AddFlashcard(stackId);
                 break;
             case StackMenuOption.EditFlashcard:
+                _flashcardsController.EditFlashcard(stackId);
                 break;
             case StackMenuOption.DeleteFlashcard:
+                _flashcardsController.DeleteFlashcard(stackId);
                 break;
             case StackMenuOption.DeleteStack:
-                _databaseAccess.ExecuteQuery(_stacksQueries.DeleteStackQuery(), new { Name = stackName });
+                _databaseAccess.ExecuteQuery(_stacksQueries.DeleteStackQuery(), new { Id = stackId });
                 break;
         }
     }

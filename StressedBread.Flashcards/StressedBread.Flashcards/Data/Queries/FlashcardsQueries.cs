@@ -1,11 +1,18 @@
 ﻿namespace StressedBread.Flashcards.Data.Queries;
 internal class FlashcardsQueries
 {
-    internal string GetFlashcardsQuery()
+    internal string GetFlashcardsByStackIdQuery()
     {
         return @"
                 SELECT Id, Question, Answer FROM Flashcards
                 WHERE StackId = @StackId";
+    }
+
+    internal string GetFlashcardByIdQuery()
+    {
+        return @"
+                SELECT Id, Question, Answer FROM Flashcards
+                WHERE Id = @Id";
     }
 
     internal string AddFlashcardQuery()
@@ -28,5 +35,13 @@ internal class FlashcardsQueries
                 UPDATE Flashcards 
                 SET Question = @Question, Answer = @Answer 
                 WHERE Id = @Id";
+    }
+
+    internal string GetAllFlashcardsQuery()
+    {
+        return @"
+                SELECT f.Id, f.Question, f.Answer, s.Name AS StackName 
+                FROM Flashcards f
+                JOIN Stacks s ON f.StackId = s.Id";
     }
 }

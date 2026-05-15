@@ -18,7 +18,7 @@ var stacksMenu = new StacksMenu();
 var flashcardsUI = new FlashcardsUI();
 var flashcardsController = new FlashcardsController(flashcardsUI, flashcardsDatabaseAccess, flashcardsQueries);
 var stacksController = new StacksController(stacksMenu, flashcardsDatabaseAccess, stacksQueries, flashcardsController);
-var mainMenu = new MainMenu(stacksController);
+var mainMenu = new MainMenu(stacksController, flashcardsController);
 var databaseAccess = new DatabaseAccess(databaseConfig.FlashcardsConnectionString);
 
 // Application flow

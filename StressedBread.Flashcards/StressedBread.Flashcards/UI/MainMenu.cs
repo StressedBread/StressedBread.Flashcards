@@ -8,9 +8,11 @@ namespace StressedBread.Flashcards.UI;
 internal class MainMenu
 {
     private readonly StacksController _stacksController;
-    internal MainMenu(StacksController stacksController)
+    private readonly FlashcardsController _flashcardsController;
+    internal MainMenu(StacksController stacksController, FlashcardsController flashcardsController)
     {
         _stacksController = stacksController;
+        _flashcardsController = flashcardsController;
     }
 
     internal void Menu()
@@ -30,6 +32,7 @@ internal class MainMenu
                     _stacksController.Menu();
                     break;
                 case MenuOption.ManageFlashcards:
+                    _flashcardsController.FlashcardsMenu();
                     break;
                 case MenuOption.Exit:
                     return;

@@ -15,10 +15,12 @@ var databaseInitialization = new DatabaseInitializer(databaseConfig.DefaultConne
 
 //Controllers and Menus
 var stacksMenu = new StacksMenu();
+var studyMenu = new StudyMenu();
 var flashcardsUI = new FlashcardsUI();
 var flashcardsController = new FlashcardsController(flashcardsUI, flashcardsDatabaseAccess, flashcardsQueries);
 var stacksController = new StacksController(stacksMenu, flashcardsDatabaseAccess, stacksQueries, flashcardsController);
-var mainMenu = new MainMenu(stacksController, flashcardsController);
+var studyController = new StudyController(flashcardsDatabaseAccess, stacksQueries, flashcardsQueries, studyMenu);
+var mainMenu = new MainMenu(stacksController, flashcardsController, studyController);
 var databaseAccess = new DatabaseAccess(databaseConfig.FlashcardsConnectionString);
 
 // Application flow

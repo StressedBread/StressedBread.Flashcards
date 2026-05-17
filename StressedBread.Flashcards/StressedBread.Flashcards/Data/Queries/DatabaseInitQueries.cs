@@ -39,4 +39,22 @@ internal class DatabaseInitQueries
                 );
             END";
     }
+
+    internal string CreateStudySessionTableQuery90()
+    {
+        return @"
+            IF OBJECT_ID(N'dbo.StudySessions', 'U') IS NULL
+            BEGIN
+                CREATE TABLE dbo.StudySessions (
+                    Id INT PRIMARY KEY IDENTITY(1,1),
+                    Score INT NOT NULL,
+                    SessionDate DATETIME NOT NULL,
+                    StackId INT NOT NULL,
+                    CONSTRAINT FK_StudySessions_Stacks
+                        FOREIGN KEY (StackId) 
+                        REFERENCES dbo.Stacks(Id)
+                        ON DELETE CASCADE
+                );
+            END";
+    }
 }

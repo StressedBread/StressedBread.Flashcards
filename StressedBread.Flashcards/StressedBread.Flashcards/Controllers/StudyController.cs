@@ -1,0 +1,79 @@
+﻿using StressedBread.Flashcards.Data;
+using StressedBread.Flashcards.Data.Queries;
+using StressedBread.Flashcards.DTOs;
+using StressedBread.Flashcards.Models;
+using StressedBread.Flashcards.UI;
+
+namespace StressedBread.Flashcards.Controllers;
+internal class StudyController
+{
+    private readonly DatabaseAccess _databaseAccess;
+    private readonly StacksQueries _stacksQueries;
+    private readonly FlashcardsQueries _flashcardsQueries;
+    private readonly StudyMenu _studyMenu;
+
+    private List<StacksModel> _stacks = new();
+    private StacksModel _currentStack = new();
+    private List<FlashcardsDTO> _flashcards = new();
+
+    private Random _random = new();
+
+    private int _totalFlashcards = 0;
+    private int _score = 0;
+
+    internal StudyController(DatabaseAccess databaseAccess, StacksQueries stacksQueries, FlashcardsQueries flashcardsQueries, StudyMenu studyMenu)
+    {
+        _databaseAccess = databaseAccess;
+        _stacksQueries = stacksQueries;
+        _flashcardsQueries = flashcardsQueries;
+        _studyMenu = studyMenu;
+    }
+
+    internal void StudyStackSelection()
+    {
+        _stacks = _databaseAccess.Reader<StacksModel>(_stacksQueries.GetAllStacksQuery());
+        _currentStack = _studyMenu.StudyMenuView(_stacks);
+        _flashcards = _databaseAccess.Reader<FlashcardsDTO>(_flashcardsQueries.GetFlashcardsByStackIdQuery(), new { StackId = _currentStack.Id });
+        _totalFlashcards = _flashcards.Count;
+
+        if (_totalFlashcards == 0)
+        {
+            _studyMenu.NoFlashcardsInStackView();
+            return;
+        }
+
+        StudyFlashcards();
+    }
+
+    internal void StudyFlashcards()
+    {
+        while (true)
+        {
+            FlashcardsDTO currentFlashcard = _flashcards[_random.Next(_flashcards.Count)];
+
+            string answer = _studyMenu.StudyFlashcardView(currentFlashcard);
+
+            if (String.Equals(answer.Trim(), "0", StringComparison.OrdinalIgnoreCase))
+            {
+                _studyMenu.StudyCompletedView(_score, _totalFlashcards);
+                _score = 0;
+                return;
+            }
+
+            bool isCorrect = String.Equals(answer.Trim(), currentFlashcard.Answer.Trim(), StringComparison.OrdinalIgnoreCase);
+
+            if (isCorrect) _score++;
+
+            _studyMenu.IsCorrectAnswerView(isCorrect, currentFlashcard);
+
+            _flashcards.Remove(currentFlashcard);
+
+            if (_flashcards.Count == 0)
+            {
+                _studyMenu.StudyCompletedView(_score, _totalFlashcards);
+                _score = 0;
+                return;
+            }
+        }
+    }
+}

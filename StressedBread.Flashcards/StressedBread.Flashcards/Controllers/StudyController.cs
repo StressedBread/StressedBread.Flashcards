@@ -95,9 +95,8 @@ internal class StudyController
         else
         {
             StacksModel stack = _stacks.First(s => s.Name.Equals(result, StringComparison.OrdinalIgnoreCase));
-            int stackId = stack.Id;
 
-            List<StudySessionsDTO> studySessions = _databaseAccess.Reader<StudySessionsDTO>(_studyQueries.GetStudySessionsQuery(), new { StackId = stackId });
+            List<StudySessionsDTO> studySessions = _databaseAccess.Reader<StudySessionsDTO>(_studyQueries.GetStudySessionsQuery(), new { StackId = stack.Id });
             _studyMenu.ViewStudySessions(studySessions);
         }
     }

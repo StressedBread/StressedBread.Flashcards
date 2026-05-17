@@ -37,17 +37,16 @@ internal class StacksController
                 CreateStack(result);
             else
             {
-                string stackName = _stacks.First(s => s.Name.ToLower() == result.ToLower()).Name;
-                int stackId = _stacks.First(s => s.Name.ToLower() == result.ToLower()).Id;
+                StacksModel stack = _stacks.First(s => s.Name.Equals(result, StringComparison.OrdinalIgnoreCase));
 
-                StackMenuOption option = _stacksMenu.ManageStackMenuView(stackName);
+                StackMenuOption option = _stacksMenu.ManageStackMenuView(stack.Name);
 
                 if (option == StackMenuOption.ChangeStack)
                     continue;
                 if (option == StackMenuOption.BackToMainMenu)
                     return;
 
-                ManageStack(option, stackId);
+                ManageStack(option, stack.Id);
             }
         }
     }

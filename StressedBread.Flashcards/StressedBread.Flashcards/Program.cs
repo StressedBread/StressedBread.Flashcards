@@ -9,6 +9,7 @@ var startupView = new StartupView();
 var databaseInitQueries = new DatabaseInitQueries();
 var stacksQueries = new StacksQueries();
 var flashcardsQueries = new FlashcardsQueries();
+var studyQueries = new StudyQueries();
 var defaultDatabaseAccess = new DatabaseAccess(databaseConfig.DefaultConnectionString);
 var flashcardsDatabaseAccess = new DatabaseAccess(databaseConfig.FlashcardsConnectionString);
 var databaseInitialization = new DatabaseInitializer(databaseConfig.DefaultConnectionString, databaseConfig.FlashcardsConnectionString, databaseInitQueries, defaultDatabaseAccess, flashcardsDatabaseAccess);
@@ -19,7 +20,7 @@ var studyMenu = new StudyMenu();
 var flashcardsUI = new FlashcardsUI();
 var flashcardsController = new FlashcardsController(flashcardsUI, flashcardsDatabaseAccess, flashcardsQueries);
 var stacksController = new StacksController(stacksMenu, flashcardsDatabaseAccess, stacksQueries, flashcardsController);
-var studyController = new StudyController(flashcardsDatabaseAccess, stacksQueries, flashcardsQueries, studyMenu);
+var studyController = new StudyController(flashcardsDatabaseAccess, stacksQueries, flashcardsQueries, studyQueries, studyMenu);
 var mainMenu = new MainMenu(stacksController, flashcardsController, studyController);
 var databaseAccess = new DatabaseAccess(databaseConfig.FlashcardsConnectionString);
 

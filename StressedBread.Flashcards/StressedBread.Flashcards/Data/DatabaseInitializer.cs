@@ -50,6 +50,7 @@ internal class DatabaseInitializer
         {
             _flashcardsDatabaseAccess.ExecuteQuery(_databaseInitQueries.CreateStacksTableQuery(), _flashcardsConnectionString);
             _flashcardsDatabaseAccess.ExecuteQuery(_databaseInitQueries.CreateFlashcardsTableQuery(), _flashcardsConnectionString);
+            _flashcardsDatabaseAccess.ExecuteQuery(_databaseInitQueries.CreateStudySessionTableQuery(), _flashcardsConnectionString);
 
             return new DatabaseSetupResultModel { IsSuccessful = true };
         }

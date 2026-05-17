@@ -6,6 +6,7 @@ internal class Enums
     {
         ManageStacks,
         ManageFlashcards,
+        Study,
         Exit
     }
 

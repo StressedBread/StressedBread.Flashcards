@@ -10,6 +10,7 @@ internal class StudyController
     private readonly DatabaseAccess _databaseAccess;
     private readonly StacksQueries _stacksQueries;
     private readonly FlashcardsQueries _flashcardsQueries;
+    private readonly StudyQueries _studyQueries;
     private readonly StudyMenu _studyMenu;
 
     private List<StacksModel> _stacks = new();
@@ -21,11 +22,12 @@ internal class StudyController
     private int _totalFlashcards = 0;
     private int _score = 0;
 
-    internal StudyController(DatabaseAccess databaseAccess, StacksQueries stacksQueries, FlashcardsQueries flashcardsQueries, StudyMenu studyMenu)
+    internal StudyController(DatabaseAccess databaseAccess, StacksQueries stacksQueries, FlashcardsQueries flashcardsQueries, StudyQueries studyQueries, StudyMenu studyMenu)
     {
         _databaseAccess = databaseAccess;
         _stacksQueries = stacksQueries;
         _flashcardsQueries = flashcardsQueries;
+        _studyQueries = studyQueries;
         _studyMenu = studyMenu;
     }
 
@@ -43,6 +45,9 @@ internal class StudyController
         }
 
         StudyFlashcards();
+
+        _databaseAccess.ExecuteQuery(_studyQueries.InsertStudySessionQuery(), new { Score = _score, SessionDate = DateTime.Now, StackId = _currentStack.Id });
+        _score = 0;
     }
 
     internal void StudyFlashcards()
@@ -56,7 +61,6 @@ internal class StudyController
             if (String.Equals(answer.Trim(), "0", StringComparison.OrdinalIgnoreCase))
             {
                 _studyMenu.StudyCompletedView(_score, _totalFlashcards);
-                _score = 0;
                 return;
             }
 
@@ -71,7 +75,6 @@ internal class StudyController
             if (_flashcards.Count == 0)
             {
                 _studyMenu.StudyCompletedView(_score, _totalFlashcards);
-                _score = 0;
                 return;
             }
         }

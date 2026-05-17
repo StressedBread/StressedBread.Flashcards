@@ -40,7 +40,7 @@ internal class DatabaseInitQueries
             END";
     }
 
-    internal string CreateStudySessionTableQuery90()
+    internal string CreateStudySessionTableQuery()
     {
         return @"
             IF OBJECT_ID(N'dbo.StudySessions', 'U') IS NULL

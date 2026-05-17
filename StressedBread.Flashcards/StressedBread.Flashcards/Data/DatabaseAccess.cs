@@ -20,7 +20,7 @@ internal class DatabaseAccess
 
     internal List<T> Reader<T>(string query, object? parameters = null)
     {
-        var connection = new SqlConnection(_connectionString);
+        using var connection = new SqlConnection(_connectionString);
         connection.Open();
         return connection.Query<T>(query, parameters).ToList();
     }

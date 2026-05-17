@@ -28,4 +28,10 @@ internal class Enums
         DeleteFlashcard,
         BackToMainMenu
     }
+
+    internal enum StackReturnOption
+    {
+        ChangeStack,
+        BackToMainMenu
+    }
 }

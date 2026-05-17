@@ -6,6 +6,31 @@ using static StressedBread.Flashcards.Enums;
 namespace StressedBread.Flashcards.UI;
 internal class FlashcardsUI
 {
+    internal void ViewFlashcards(List<FlashcardsDTO> flashcards)
+    {
+        AnsiConsole.Clear();
+
+        var table = new Table()
+            .RoundedBorder()
+            .BorderColor(Color.Gray);
+
+        table.AddColumn("ID", col => col.LeftAligned());
+        table.AddColumn("Question", col => col.LeftAligned());
+        table.AddColumn("Answer", col => col.LeftAligned());
+
+        int displayId = 1;
+
+        foreach (var flashcard in flashcards)
+        {
+            table.AddRow(displayId.ToString(), flashcard.Question, flashcard.Answer);
+            displayId++;
+        }
+
+        AnsiConsole.Write(table);
+        AnsiConsole.MarkupLine("Press any key to continue...");
+        Console.ReadKey();
+    }
+
     internal int FlashcardsStackView(List<FlashcardsDTO> flashcards)
     {
         AnsiConsole.Clear();
@@ -27,9 +52,7 @@ internal class FlashcardsUI
         }
 
         AnsiConsole.Write(table);
-        int selectedDisplayId = AnsiConsole.Ask<int>("Enter the [blue]ID[/] of a flashcard or enter [blue]0[/] to go back:");
-        int selectedRealId = selectedDisplayId > 0 && selectedDisplayId <= flashcards.Count ? flashcards[selectedDisplayId - 1].Id : 0;
-        return selectedRealId;
+        return AnsiConsole.Ask<int>("Enter the [blue]ID[/] of a flashcard or enter [blue]0[/] to go back:");
     }
 
     internal (string question, string answer) AddFlashcardView()
@@ -92,5 +115,12 @@ internal class FlashcardsUI
                 .Title($"Select an option for the flashcard: [blue]{flashcardQuestion}[/]")
                 .UseConverter(option => EnumToStringFormatAndConvert.Convert(option))
                 .AddChoices(Enum.GetValues<FlashcardMenuOption>()));
+    }
+
+    internal void InvalidFlashcardIdMessage()
+    {
+        AnsiConsole.MarkupLine("[red]Invalid flashcard ID. Please try again.[/]");
+        AnsiConsole.MarkupLine("Press any key to continue...");
+        Console.ReadKey();
     }
 }

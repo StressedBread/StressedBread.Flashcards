@@ -31,10 +31,15 @@ internal class FlashcardsController
         return _databaseAccess.Reader<AllFlashcardsDTO>(_flashcardsQueries.GetAllFlashcardsQuery(), new { Id = flashcardId });
     }
 
+    internal FlashcardsDTO? GetFlashcardById(int flashcardId)
+    {
+        return _databaseAccess.Reader<FlashcardsDTO>(_flashcardsQueries.GetFlashcardByIdQuery(), new { Id = flashcardId }).FirstOrDefault();
+    }
+
     internal void ViewFlashcards(int stackId)
     {
         _flashcards = GetFlashcardsByStackId(stackId);
-        _flashcardsUI.FlashcardsStackView(_flashcards);
+        _flashcardsUI.ViewFlashcards(_flashcards);
     }
 
     internal void AddFlashcard(int stackId)
@@ -46,14 +51,26 @@ internal class FlashcardsController
     internal void EditFlashcard(int stackId)
     {
         _flashcards = GetFlashcardsByStackId(stackId);
-        int flashcardId = _flashcardsUI.FlashcardsStackView(_flashcards);
-        
-        EditFlashcardById(flashcardId);
+        int selectedDisplayId = _flashcardsUI.FlashcardsStackView(_flashcards);
+
+        if (selectedDisplayId == 0)
+            return;
+
+        int selectedRealId = selectedDisplayId > 0 && selectedDisplayId <= _flashcards.Count ? _flashcards[selectedDisplayId - 1].Id : -1;
+
+        EditFlashcardById(selectedRealId);
     }
 
     internal void EditFlashcardById(int flashcardId)
     {
-        var currentFlashcard = GetAllFlashcards(flashcardId).First();
+        var currentFlashcard = GetFlashcardById(flashcardId);
+
+        if (flashcardId == -1 || currentFlashcard == null)
+        {
+            _flashcardsUI.InvalidFlashcardIdMessage();
+            return;
+        }
+        
         var (question, answer) = _flashcardsUI.EditFlashcardView(currentFlashcard);
 
         if (String.Equals(question, "0")) question = currentFlashcard.Question;
@@ -65,12 +82,24 @@ internal class FlashcardsController
     internal void DeleteFlashcard(int stackId)
     {
         _flashcards = GetFlashcardsByStackId(stackId);
-        int flashcardId = _flashcardsUI.FlashcardsStackView(_flashcards);
-        DeleteFlashcardById(flashcardId);
+        int selectedDisplayId = _flashcardsUI.FlashcardsStackView(_flashcards);
+         
+        if (selectedDisplayId == 0)
+            return;
+
+        int selectedRealId = selectedDisplayId > 0 && selectedDisplayId <= _flashcards.Count ? _flashcards[selectedDisplayId - 1].Id : -1;
+
+        DeleteFlashcardById(selectedRealId);
     }
 
     internal void DeleteFlashcardById(int flashcardId)
     {
+        if (flashcardId == -1)
+        {
+            _flashcardsUI.InvalidFlashcardIdMessage();
+            return;
+        }
+
         _databaseAccess.ExecuteQuery(_flashcardsQueries.DeleteFlashcardQuery(), new { Id = flashcardId });
     }
 

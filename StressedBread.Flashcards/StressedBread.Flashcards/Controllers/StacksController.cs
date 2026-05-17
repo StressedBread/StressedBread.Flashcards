@@ -23,31 +23,49 @@ internal class StacksController
         _flashcardsController = flashcardsController;
     }
 
-    internal void Menu()
+    internal List<StacksModel> GetAllStacks()
+    {
+        return _databaseAccess.Reader<StacksModel>(_stacksQueries.GetAllStacksQuery());
+    }
+
+    internal void SelectStack()
     {
         while (true)
         {
-            _stacks = _databaseAccess.Reader<StacksModel>(_stacksQueries.GetAllStacksQuery());
+            _stacks = GetAllStacks();
             string result = _stacksMenu.StacksMainMenuView(_stacks);
 
             if (String.Equals(result.Trim(), "0", StringComparison.OrdinalIgnoreCase))
                 return;
 
-            if (!_stacks.Any(s => s.Name.ToLower() == result.ToLower()))
+            if (!_stacks.Any(s => s.Name.Equals(result, StringComparison.OrdinalIgnoreCase)))
                 CreateStack(result);
             else
             {
-                StacksModel stack = _stacks.First(s => s.Name.Equals(result, StringComparison.OrdinalIgnoreCase));
-
-                StackMenuOption option = _stacksMenu.ManageStackMenuView(stack.Name);
-
-                if (option == StackMenuOption.ChangeStack)
-                    continue;
-                if (option == StackMenuOption.BackToMainMenu)
+                StackReturnOption option = StackMenu(result);
+                if (option == StackReturnOption.BackToMainMenu)
                     return;
-
-                ManageStack(option, stack.Id);
             }
+        }
+    }
+
+    internal StackReturnOption StackMenu(string stackName)
+    {       
+        while (true)
+        {
+            _stacks = GetAllStacks();
+            StacksModel? stack = _stacks.FirstOrDefault(s => s.Name.Equals(stackName, StringComparison.OrdinalIgnoreCase));
+
+            if (stack == null)
+                return StackReturnOption.ChangeStack;
+
+            StackMenuOption option = _stacksMenu.ManageStackMenuView(stackName);
+            if (option == StackMenuOption.ChangeStack)
+                return StackReturnOption.ChangeStack;
+            if (option == StackMenuOption.BackToMainMenu)
+                return StackReturnOption.BackToMainMenu;
+            
+            ManageStack(option, stack.Id);
         }
     }
 

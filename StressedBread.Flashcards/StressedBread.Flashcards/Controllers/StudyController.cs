@@ -82,22 +82,25 @@ internal class StudyController
 
     internal void ViewStudySessions()
     {
-        _stacks = _databaseAccess.Reader<StacksModel>(_stacksQueries.GetAllStacksQuery());
-        string result = _studyMenu.GetStackNameInput(_stacks);
-
-        if (String.Equals(result.Trim(), "0", StringComparison.OrdinalIgnoreCase))
-            return;
-        else if (String.Equals(result.Trim(), "1", StringComparison.OrdinalIgnoreCase))
+        while (true)
         {
-            List<StudySessionsDTO> studySessions = _databaseAccess.Reader<StudySessionsDTO>(_studyQueries.GetStudySessionsQuery(), new { StackId = (int?)null });
-            _studyMenu.ViewStudySessions(studySessions);
-        }
-        else
-        {
-            StacksModel stack = _stacks.First(s => s.Name.Equals(result, StringComparison.OrdinalIgnoreCase));
+            _stacks = _databaseAccess.Reader<StacksModel>(_stacksQueries.GetAllStacksQuery());
+            string result = _studyMenu.GetStackNameInput(_stacks);
 
-            List<StudySessionsDTO> studySessions = _databaseAccess.Reader<StudySessionsDTO>(_studyQueries.GetStudySessionsQuery(), new { StackId = stack.Id });
-            _studyMenu.ViewStudySessions(studySessions);
+            if (String.Equals(result.Trim(), "0", StringComparison.OrdinalIgnoreCase))
+                return;
+            else if (String.Equals(result.Trim(), "1", StringComparison.OrdinalIgnoreCase))
+            {
+                List<StudySessionsDTO> studySessions = _databaseAccess.Reader<StudySessionsDTO>(_studyQueries.GetStudySessionsQuery(), new { StackId = (int?)null });
+                _studyMenu.ViewStudySessions(studySessions);
+            }
+            else
+            {
+                StacksModel stack = _stacks.First(s => s.Name.Equals(result, StringComparison.OrdinalIgnoreCase));
+
+                List<StudySessionsDTO> studySessions = _databaseAccess.Reader<StudySessionsDTO>(_studyQueries.GetStudySessionsQuery(), new { StackId = stack.Id });
+                _studyMenu.ViewStudySessions(studySessions);
+            }
         }
     }
 }

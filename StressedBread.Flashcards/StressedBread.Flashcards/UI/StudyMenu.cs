@@ -31,7 +31,7 @@ internal class StudyMenu
 
         AnsiConsole.Write(table);
 
-        return AnsiConsole.Ask<string>("Type your answer or 0 to quit:");
+        return AnsiConsole.Ask<string>("Type your answer or [blue]0[/] to quit:");
     }
 
     internal void StudyCompletedView(int score, int total)

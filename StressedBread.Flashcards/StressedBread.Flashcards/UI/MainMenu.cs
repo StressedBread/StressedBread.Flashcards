@@ -31,7 +31,7 @@ internal class MainMenu
             switch (selection)
             {
                 case MenuOption.ManageStacks:
-                    _stacksController.Menu();
+                    _stacksController.SelectStack();
                     break;
                 case MenuOption.ManageFlashcards:
                     _flashcardsController.FlashcardsMenu();

@@ -60,4 +60,46 @@ internal class StudyMenu
         AnsiConsole.MarkupLine($"Press any key to continue...");
         Console.ReadKey();
     }
+
+    internal string GetStackNameInput(List<StacksModel> stacksModel)
+    {
+        AnsiConsole.Clear();
+
+        var table = new Table()
+            .RoundedBorder()
+            .BorderColor(Color.Gray);
+
+        table.AddColumn("Name", col => col.LeftAligned());
+
+        foreach (var stack in stacksModel)
+        {
+            table.AddRow(stack.Name);
+        }
+
+        AnsiConsole.Write(table);
+
+        return AnsiConsole.Ask<string>("Enter the [blue]name[/] of a stack to see its study sessions, [blue]1[/] to see all study sessions or [blue]0[/] to go back:");
+    }
+
+    internal void ViewStudySessions(List<StudySessionsDTO> studySessions)
+    {
+        AnsiConsole.Clear();
+
+        var table = new Table()
+            .RoundedBorder()
+            .BorderColor(Color.Gray);
+
+        table.AddColumn("Id", col => col.LeftAligned());
+        table.AddColumn("Score", col => col.LeftAligned());
+        table.AddColumn("Date and Time", col => col.LeftAligned());
+        table.AddColumn("Stack Name", col => col.LeftAligned());
+
+        foreach (var session in studySessions)
+        {
+            table.AddRow(session.Id.ToString(), session.Score.ToString(), session.SessionDate.ToString("g"), session.StackName);
+        }
+        AnsiConsole.Write(table);
+        AnsiConsole.MarkupLine($"Press any key to continue...");
+        Console.ReadKey();
+    }
 }

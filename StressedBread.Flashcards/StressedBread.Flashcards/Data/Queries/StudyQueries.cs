@@ -7,10 +7,17 @@ internal class StudyQueries
             INSERT INTO dbo.StudySessions (Score, SessionDate, StackId)
             VALUES (@Score, @SessionDate, @StackId);";
     }
-    internal string GetStudySessionsByStackIdQuery()
+    internal string GetStudySessionsQuery()
     {
         return @"
-            SELECT * FROM dbo.StudySessions
-            WHERE StackId = @StackId;";
+            SELECT 
+                study.Id, 
+                study.Score, 
+                study.SessionDate, 
+                stack.Name AS StackName,
+                study.StackId 
+            FROM dbo.StudySessions study
+            JOIN dbo.Stacks stack ON study.StackId = stack.Id   
+            WHERE (@StackId IS NULL OR study.StackId = @StackId);";
     }
 }

@@ -30,7 +30,7 @@ internal class StacksController
             _stacks = _databaseAccess.Reader<StacksModel>(_stacksQueries.GetAllStacksQuery());
             string result = _stacksMenu.StacksMainMenuView(_stacks);
 
-            if (result == "0")
+            if (String.Equals(result.Trim(), "0", StringComparison.OrdinalIgnoreCase))
                 return;
 
             if (!_stacks.Any(s => s.Name.ToLower() == result.ToLower()))

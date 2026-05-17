@@ -39,6 +39,9 @@ internal class MainMenu
                 case MenuOption.Study:
                     _studyController.StudyStackSelection();
                     break;
+                case MenuOption.ViewStudySessions:
+                    _studyController.ViewStudySessions();
+                    break;
                 case MenuOption.Exit:
                     return;
             }

@@ -7,6 +7,7 @@ internal class Enums
         ManageStacks,
         ManageFlashcards,
         Study,
+        ViewStudySessions,
         Exit
     }
 

@@ -10,11 +10,13 @@ internal class MainMenu
     private readonly StacksController _stacksController;
     private readonly FlashcardsController _flashcardsController;
     private readonly StudyController _studyController;
-    internal MainMenu(StacksController stacksController, FlashcardsController flashcardsController, StudyController studyController)
+    private readonly ReportsController _reportsController;
+    internal MainMenu(StacksController stacksController, FlashcardsController flashcardsController, StudyController studyController, ReportsController reportsController)
     {
         _stacksController = stacksController;
         _flashcardsController = flashcardsController;
         _studyController = studyController;
+        _reportsController = reportsController;
     }
 
     internal void Menu()
@@ -41,6 +43,9 @@ internal class MainMenu
                     break;
                 case MenuOption.ViewStudySessions:
                     _studyController.ViewStudySessions();
+                    break;
+                case MenuOption.ViewReports:
+                    _reportsController.ViewReports();
                     break;
                 case MenuOption.Exit:
                     return;

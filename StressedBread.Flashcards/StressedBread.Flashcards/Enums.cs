@@ -8,6 +8,7 @@ internal class Enums
         ManageFlashcards,
         Study,
         ViewStudySessions,
+        ViewReports,
         Exit
     }
 
@@ -32,6 +33,13 @@ internal class Enums
     internal enum StackReturnOption
     {
         ChangeStack,
+        BackToMainMenu
+    }
+
+    internal enum ReportMenuOption
+    {
+        SessionsPerMonthPerStack,
+        AverageScorePerMonthPerStack,
         BackToMainMenu
     }
 }

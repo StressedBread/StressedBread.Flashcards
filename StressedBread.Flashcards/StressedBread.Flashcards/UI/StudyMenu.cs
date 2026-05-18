@@ -17,6 +17,26 @@ internal class StudyMenu
         return selection;
     }
 
+    internal string StacksView(List<StacksModel> stacksModel)
+    {
+        AnsiConsole.Clear();
+
+        var table = new Table()
+            .RoundedBorder()
+            .BorderColor(Color.Gray);
+
+        table.AddColumn("Name", col => col.LeftAligned());
+
+        foreach (var stack in stacksModel)
+        {
+            table.AddRow(stack.Name);
+        }
+
+        AnsiConsole.Write(table);
+
+        return AnsiConsole.Ask<string>("Enter the [blue]name[/] of a stack you want to study or enter [blue]0[/] to go back:");
+    }
+
     internal string StudyFlashcardView(FlashcardsDTO flashcard)
     {
         AnsiConsole.Clear();

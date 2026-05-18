@@ -14,7 +14,6 @@ internal class StudyController
     private readonly StudyMenu _studyMenu;
 
     private List<StacksModel> _stacks = new();
-    private StacksModel _currentStack = new();
     private List<FlashcardsDTO> _flashcards = new();
 
     private Random _random = new();
@@ -38,18 +37,18 @@ internal class StudyController
             _stacks = _databaseAccess.Reader<StacksModel>(_stacksQueries.GetAllStacksQuery());
 
             string stackName = _studyMenu.StacksView(_stacks);
-            StacksModel? _currentStack = _stacks.FirstOrDefault(s => s.Name.Equals(stackName, StringComparison.OrdinalIgnoreCase));
+            StacksModel? currentStack = _stacks.FirstOrDefault(s => s.Name.Equals(stackName, StringComparison.OrdinalIgnoreCase));
 
             if (String.Equals(stackName.Trim(), "0", StringComparison.OrdinalIgnoreCase))
                 return;
 
-            if (_currentStack == null)
+            if (currentStack == null)
             {
                 _studyMenu.NoStacksAvailableView();
                 continue;
             }
 
-            _flashcards = _databaseAccess.Reader<FlashcardsDTO>(_flashcardsQueries.GetFlashcardsByStackIdQuery(), new { StackId = _currentStack.Id });
+            _flashcards = _databaseAccess.Reader<FlashcardsDTO>(_flashcardsQueries.GetFlashcardsByStackIdQuery(), new { StackId = currentStack.Id });
             _totalFlashcards = _flashcards.Count;
 
             if (_totalFlashcards == 0)
@@ -60,7 +59,7 @@ internal class StudyController
 
             StudyFlashcards();
 
-            _databaseAccess.ExecuteQuery(_studyQueries.InsertStudySessionQuery(), new { Score = _score, SessionDate = DateTime.Now, StackId = _currentStack.Id });
+            _databaseAccess.ExecuteQuery(_studyQueries.InsertStudySessionQuery(), new { Score = _score, SessionDate = DateTime.Now, StackId = currentStack.Id });
             _score = 0;
         }
     }

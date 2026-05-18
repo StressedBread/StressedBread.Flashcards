@@ -8,30 +8,18 @@ internal class FlashcardsUI
 {
     internal void ViewFlashcards(List<FlashcardsDTO> flashcards)
     {
-        AnsiConsole.Clear();
-
-        var table = new Table()
-            .RoundedBorder()
-            .BorderColor(Color.Gray);
-
-        table.AddColumn("ID", col => col.LeftAligned());
-        table.AddColumn("Question", col => col.LeftAligned());
-        table.AddColumn("Answer", col => col.LeftAligned());
-
-        int displayId = 1;
-
-        foreach (var flashcard in flashcards)
-        {
-            table.AddRow(displayId.ToString(), flashcard.Question, flashcard.Answer);
-            displayId++;
-        }
-
-        AnsiConsole.Write(table);
+        BuildFlashcardTable(flashcards);
         AnsiConsole.MarkupLine("Press any key to continue...");
         Console.ReadKey();
     }
 
     internal int FlashcardsStackView(List<FlashcardsDTO> flashcards)
+    {
+        BuildFlashcardTable(flashcards);
+        return AnsiConsole.Ask<int>("Enter the [blue]ID[/] of a flashcard or enter [blue]0[/] to go back:");
+    }
+
+    private void BuildFlashcardTable(List<FlashcardsDTO> flashcards)
     {
         AnsiConsole.Clear();
 
@@ -52,7 +40,6 @@ internal class FlashcardsUI
         }
 
         AnsiConsole.Write(table);
-        return AnsiConsole.Ask<int>("Enter the [blue]ID[/] of a flashcard or enter [blue]0[/] to go back:");
     }
 
     internal (string question, string answer) AddFlashcardView()

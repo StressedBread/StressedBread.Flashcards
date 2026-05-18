@@ -21,7 +21,7 @@ internal class DatabaseInitializer
         _flashcardsDatabaseAccess = flashcardsDatabaseAccess;
     }
 
-    internal DatabaseSetupResultModel IsDefaultConnectionStringValid()
+    internal DatabaseSetupResultModel AreConnectionStringsValid()
     {
         if (!string.IsNullOrWhiteSpace(_defaultConnectionString) && !string.IsNullOrWhiteSpace(_flashcardsConnectionString))
         {

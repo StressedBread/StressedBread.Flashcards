@@ -25,10 +25,9 @@ var stacksController = new StacksController(stacksMenu, flashcardsDatabaseAccess
 var studyController = new StudyController(flashcardsDatabaseAccess, stacksQueries, flashcardsQueries, studyQueries, studyMenu);
 var reportsController = new ReportsController(reportsMenu, flashcardsDatabaseAccess, reportQueries, stacksQueries);
 var mainMenu = new MainMenu(stacksController, flashcardsController, studyController, reportsController);
-var databaseAccess = new DatabaseAccess(databaseConfig.FlashcardsConnectionString);
 
 // Application flow
-var isStringValid = databaseInitialization.IsDefaultConnectionStringValid();
+var isStringValid = databaseInitialization.AreConnectionStringsValid();
 var isDatabaseInitialized = databaseInitialization.InitializeDatabase();
 var tableCreationResult = databaseInitialization.CreateTables();
 

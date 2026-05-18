@@ -26,11 +26,6 @@ internal class FlashcardsController
         return _databaseAccess.Reader<FlashcardsDTO>(_flashcardsQueries.GetFlashcardsByStackIdQuery(), new { StackId = stackId });
     }
 
-    internal List<AllFlashcardsDTO> GetAllFlashcards(int flashcardId)
-    {
-        return _databaseAccess.Reader<AllFlashcardsDTO>(_flashcardsQueries.GetAllFlashcardsQuery(), new { Id = flashcardId });
-    }
-
     internal FlashcardsDTO? GetFlashcardById(int flashcardId)
     {
         return _databaseAccess.Reader<FlashcardsDTO>(_flashcardsQueries.GetFlashcardByIdQuery(), new { Id = flashcardId }).FirstOrDefault();

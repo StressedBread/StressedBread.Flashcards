@@ -5,18 +5,6 @@ using StressedBread.Flashcards.Models;
 namespace StressedBread.Flashcards.UI;
 internal class StudyMenu
 {
-    internal StacksModel StudyMenuView(List<StacksModel> stacks)
-    {
-        AnsiConsole.Clear();
-
-        var selection = AnsiConsole.Prompt(new SelectionPrompt<StacksModel>()
-            .Title("Select a [green]stack to study[/]:")
-            .UseConverter(stack => stack.Name)
-            .AddChoices(stacks));
-
-        return selection;
-    }
-
     internal string StacksView(List<StacksModel> stacksModel)
     {
         AnsiConsole.Clear();
@@ -34,7 +22,7 @@ internal class StudyMenu
 
         AnsiConsole.Write(table);
 
-        return AnsiConsole.Ask<string>("Enter the [blue]name[/] of a stack you want to study or enter [blue]0[/] to go back:");
+        return AnsiConsole.Ask<string>("Enter the [blue]name[/] of a stack you want to study or enter [blue]0[/] to go back but the session won't be saved:");
     }
 
     internal string StudyFlashcardView(FlashcardsDTO flashcard)

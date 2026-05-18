@@ -64,7 +64,7 @@ internal class ReportsMenu
     {
         AnsiConsole.Clear();
         return AnsiConsole.Prompt(
-            new TextPrompt<int>("Enter the year to filter by (e.g., 2024):")
+            new TextPrompt<int>("Enter the [blue]year[/] to filter by (e.g., 2024):")
                 .Validate(input =>
                 
                     input >= 1900 && input <= 2100 ?

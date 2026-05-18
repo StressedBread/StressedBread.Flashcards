@@ -71,6 +71,13 @@ internal class StudyMenu
         Console.ReadKey();
     }
 
+    internal void NoStacksAvailableView()
+    {
+        AnsiConsole.Clear();
+        AnsiConsole.MarkupLine($"[red]No stacks with that name available! Press any key to continue...[/]");
+        Console.ReadKey();
+    }
+
     internal void IsCorrectAnswerView(bool isCorrect, FlashcardsDTO flashcard)
     {
         if (isCorrect)

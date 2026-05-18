@@ -33,21 +33,36 @@ internal class StudyController
 
     internal void StudyStackSelection()
     {
-        _stacks = _databaseAccess.Reader<StacksModel>(_stacksQueries.GetAllStacksQuery());
-        _currentStack = _studyMenu.StudyMenuView(_stacks);
-        _flashcards = _databaseAccess.Reader<FlashcardsDTO>(_flashcardsQueries.GetFlashcardsByStackIdQuery(), new { StackId = _currentStack.Id });
-        _totalFlashcards = _flashcards.Count;
-
-        if (_totalFlashcards == 0)
+        while (true)
         {
-            _studyMenu.NoFlashcardsInStackView();
-            return;
+            _stacks = _databaseAccess.Reader<StacksModel>(_stacksQueries.GetAllStacksQuery());
+
+            string stackName = _studyMenu.StacksView(_stacks);
+            StacksModel? _currentStack = _stacks.FirstOrDefault(s => s.Name.Equals(stackName, StringComparison.OrdinalIgnoreCase));
+
+            if (String.Equals(stackName.Trim(), "0", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            if (_currentStack == null)
+            {
+                _studyMenu.NoStacksAvailableView();
+                continue;
+            }
+
+            _flashcards = _databaseAccess.Reader<FlashcardsDTO>(_flashcardsQueries.GetFlashcardsByStackIdQuery(), new { StackId = _currentStack.Id });
+            _totalFlashcards = _flashcards.Count;
+
+            if (_totalFlashcards == 0)
+            {
+                _studyMenu.NoFlashcardsInStackView();
+                continue;
+            }
+
+            StudyFlashcards();
+
+            _databaseAccess.ExecuteQuery(_studyQueries.InsertStudySessionQuery(), new { Score = _score, SessionDate = DateTime.Now, StackId = _currentStack.Id });
+            _score = 0;
         }
-
-        StudyFlashcards();
-
-        _databaseAccess.ExecuteQuery(_studyQueries.InsertStudySessionQuery(), new { Score = _score, SessionDate = DateTime.Now, StackId = _currentStack.Id });
-        _score = 0;
     }
 
     internal void StudyFlashcards()

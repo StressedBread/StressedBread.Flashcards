@@ -2,7 +2,6 @@
  
 A C# console application for creating and studying flashcard stacks, with session tracking and monthly performance reports.
  
----
  
 ## Features
  
@@ -11,7 +10,6 @@ A C# console application for creating and studying flashcard stacks, with sessio
 - **Study Mode** — Practice with randomised flashcards and get instant right/wrong feedback
 - **Study History** — View past sessions filtered by stack or across all stacks
 - **Monthly Reports** — Reports showing sessions count or average score per month per stack
----
  
 ## Getting Started
  
@@ -38,7 +36,6 @@ A C# console application for creating and studying flashcard stacks, with sessio
    ```
  
    On first launch the app will automatically create the `FlashcardsStressedBread` database and all required tables. Subsequent launches safely skip this step.
----
   
 ## How to Use
  
@@ -70,7 +67,6 @@ A C# console application for creating and studying flashcard stacks, with sessio
   - **Sessions Per Month** — how many sessions you completed each month
   - **Average Score Per Month** — your average score across sessions each month
 - Enter a stack name and a year to generate the report
----
  
 ## Technologies Used
  
@@ -78,7 +74,6 @@ A C# console application for creating and studying flashcard stacks, with sessio
 - **Language**: C# 12
 - **Database**: SQL Server with Dapper
 - **UI**: Spectre.Console
----
  
 ## Configuration
  

@@ -1,4 +1,4 @@
-# Flashcards — StressedBread
+# Flashcards
  
 A C# console application for creating and studying flashcard stacks, with session tracking and monthly performance reports.
  
